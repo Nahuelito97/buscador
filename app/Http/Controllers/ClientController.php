@@ -16,10 +16,7 @@ class ClientController extends Controller
 {
   public function index(Request  $request)
   {
-      $nombre = $request->get('buscarpor');
-
-
-      $clientes = Client::whereBorrado(0)->where('nombre', 'like', "%$nombre%")->paginate(10);
+      $clientes = Client::all();
       return view('clientes.index', ['clientes' => $clientes]);
   }
 
@@ -33,39 +30,14 @@ class ClientController extends Controller
 
   public function search(){
 
-    $search_text = $_GET['query'];
-    $clientes = Client::where('nombre', 'like', '%'.$search_text.'%')->get();
-    return view('clientes.index', compact('clientes'));
+    $clientes = Client::where('nombre', 'like', '%' . request()->q . '%')
+        ->orWhere('apellido', 'like', '%' . request()->q . '%')->get();
 
-  }
-
-  public function guardar(ClientRequest $request)
-  {
-      Client::create($request->all());
-      return back()->with(['message', 'Cliente creado con exito!']);
-  }
-
-  public function editar(Client $cliente) {
-    // se retorna la vista del formulario para editar a un Cliente
-    return view('clientes.editar', compact('cliente'));
-  }
-
-
-
-  public function actualizar(ClientRequest $request, Client $cliente )
-  {
-      dd($request->all());
-      $cliente->update ($request->all());
-      return redirect()->route('clientes')->with('message', 'Cliente modificado exitosamente.');
-  }
-
-
-
-  public function borrar (Client $cliente){
-
-    $cliente->update([
-        'borrado' => 1,
+    return response()->json([
+        'clientes' => $clientes
     ]);
-    return redirect()->route('clientes')->with('notification', ' Cliente Eliminado correctamente');
+
   }
+
+
 }

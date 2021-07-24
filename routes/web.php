@@ -21,15 +21,10 @@ Route::get('/', function () {
 Route::prefix('clientes')->group(function () {
     Route::get('/', 'ClientController@index')->name('clientes');
 
-    Route::get('crear', 'ClientController@crear')->name('clientes.crear');
-    Route::post('crear', 'ClientController@guardar')->name('clientes.guardar');
 
-    Route::get('editar/{cliente}', 'ClientController@editar')->name('clientes.editar');
-    Route::put('editar/{cliente}', 'ClientController@actualizar')->name('clientes.actualizar');
-
-    Route::put('borrar/{cliente}', 'ClientController@borrar')->name('clientes.borrar');
 
 });
 
 
 
+Route::post('clientes/search', 'ClientController@search')->name('clientes.search');
